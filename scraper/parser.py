@@ -154,13 +154,12 @@ def extract_metrics_from_lines(lines) -> dict:
     }
 
 
-def extract_data_from_html(html: str, url: str) -> dict:
+def _parse_single_html(html: str, url: str) -> dict:
     """
-    將 Threads 單帖的 HTML 解析成結構化 dict：
-    - author
-    - post_text（已移除 Follow / More / Translate / Like... 等）
-    - metrics: likes, views, reply_count, repost_count, share_count
-    - comments: 粗略抓一批留言 (user, text, likes, raw_block)
+    單次 HTML → 結構化資料。
+    用來支援：
+      1) 初始畫面 (Top comments snapshot)
+      2) 深度捲動後畫面
     """
     soup = BeautifulSoup(html, "html.parser")
 
@@ -180,24 +179,21 @@ def extract_data_from_html(html: str, url: str) -> dict:
         "comments": [],
     }
 
-    # 1) 找主貼區塊：Threads 主文通常在第一個 data-pressable-container
     posts = soup.find_all("div", {"data-pressable-container": "true"})
     if not posts:
-        print("⚠️ 找不到主文區塊")
         return data
 
+    # 主文
     main_post = posts[0]
     full_text = main_post.get_text("\n", strip=True)
-    data["post_text_raw"] = full_text  # 原始版，保留 debug 用
-
+    data["post_text_raw"] = full_text
     lines = full_text.split("\n")
 
-    # 2) 取出主文中的圖片 metadata
+    # 圖片
     for img in main_post.find_all("img"):
         alt = img.get("alt", "") or ""
         if "profile picture" in alt.lower():
             continue
-
         src = img.get("src", "").strip()
         if not src:
             srcset = img.get("srcset", "")
@@ -209,48 +205,117 @@ def extract_data_from_html(html: str, url: str) -> dict:
             continue
         data["images"].append({"src": src, "alt": alt})
 
-    # 3) 作者：跳過 UI 行，拿第一個真正的 username
+    # 作者 + 主文內容 + 互動數
     data["author"] = extract_block_user(lines)
-
-    # 4) 主文純內容（移除 Translate / More / Like / Reply / Repost / Share）
     data["post_text"] = extract_block_body(lines)
 
-    # 5) 主文互動數：Like / Reply / Repost / Share
     m = extract_metrics_from_lines(lines)
     data["metrics"]["likes"] = m["likes"]
     data["metrics"]["reply_count"] = m["reply_count"]
     data["metrics"]["repost_count"] = m["repost_count"]
     data["metrics"]["share_count"] = m["share_count"]
 
-    # 6) Views：從整頁文字裡找包含 "views" 的字串（例如 "96K views"）
+    # Views
     views = 0
     for text_node in soup.stripped_strings:
         low = text_node.lower()
-        # 避免吃到 "View 3 more replies" 類型
+        # 避免吃到 "View 3 more replies"
         if "views" in low and "reply" not in low and "view more" not in low:
             views = parse_number(text_node)
             break
     data["metrics"]["views"] = views
 
-    # 7) 留言：用 posts[1:] 當留言區塊（sample，不是全量）
+    # 留言區：posts[1:] 每一個都是一個留言 block
     for block in posts[1:]:
         raw_block = block.get_text("\n", strip=True)
         if not raw_block:
             continue
 
         block_lines = raw_block.split("\n")
-
         c_user = extract_block_user(block_lines)
         c_likes = extract_block_likes(block_lines)
         c_body = extract_block_body(block_lines)
 
+        if not c_user and not c_body:
+            continue
+
         data["comments"].append(
             {
-                "user": c_user,    # 乾淨 user，例如 ryoohkilo
-                "text": c_body,    # 只剩留言內容（無 Translate / More / Like / Reply / Repost / Share）
-                "likes": c_likes,  # 98, 75, ...
-                "raw": raw_block,  # 原始 block，方便之後 debug / 清洗
+                "user": c_user,
+                "text": c_body,
+                "likes": c_likes,
+                "raw": raw_block,
             }
         )
 
     return data
+
+
+def extract_data_from_html(html_or_bundle, url: str) -> dict:
+    """
+    將 Threads 單帖的 HTML 解析成結構化 dict。
+    支援兩種輸入：
+      1) 舊版：單一 HTML 字串
+      2) 新版：{"initial_html": ..., "scrolled_html": ...}
+
+    新版策略：
+      - initial_html：畫面剛載入時的 DOM → 一定包含 UI 顯示的 Top comments
+      - scrolled_html：深度捲動後的 DOM → 載入更多留言
+      - 兩者的 comments 會合併去重，並標記 from_top_snapshot=True/False
+      - comments_by_likes：根據 likes 排序好的視圖，用於「高讚好留言 Top 5」
+    """
+    if isinstance(html_or_bundle, dict):
+        initial_html = html_or_bundle.get("initial_html") or ""
+        scrolled_html = html_or_bundle.get("scrolled_html") or ""
+    else:
+        # 向下兼容：只給一份 HTML 的舊用法
+        initial_html = ""
+        scrolled_html = html_or_bundle or ""
+
+    # 先用「優先 scrolled_html，沒有就用 initial_html」當主資料
+    main_html = scrolled_html or initial_html
+    base = _parse_single_html(main_html, url)
+
+    # 從深度捲動後 HTML 抓到的留言
+    comments_scrolled = list(base.get("comments", []))
+
+    # 再從 initial_html 再解析一次，專門抓「剛開頁時的 Top comments」
+    comments_initial = []
+    if initial_html:
+        top_struct = _parse_single_html(initial_html, url)
+        comments_initial = top_struct.get("comments", [])
+
+        # 若 main_html 其實就是 initial_html（沒有 scrolled_html），則不需要再合併一次
+        if not scrolled_html:
+            comments_scrolled = []
+
+    # 合併兩邊留言，去重，並標示來源
+    merged_comments = []
+    seen_keys = set()
+
+    for src_list, is_top in ((comments_initial, True), (comments_scrolled, False)):
+        for c in src_list:
+            key = (c.get("user", ""), c.get("text", ""))
+            if key in seen_keys:
+                continue
+            seen_keys.add(key)
+            c["from_top_snapshot"] = is_top
+            merged_comments.append(c)
+
+    base["comments"] = merged_comments
+
+    # 重新計算「抓到的實際留言數」與按讚排序視圖
+    comments_sorted = sorted(
+        merged_comments,
+        key=lambda c: c.get("likes", 0),
+        reverse=True,
+    )
+    base["comments_by_likes"] = comments_sorted
+
+    # reply_count 至少不會小於實際抓到的留言樣本數
+    base["metrics"]["reply_count"] = max(
+        base["metrics"].get("reply_count", 0),
+        len(merged_comments),
+    )
+
+    return base

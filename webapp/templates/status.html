@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Pipeline A 狀態｜Discourse Lens</title>
+    {% if status in ["pending", "running"] %}
+    <!-- 每 2 秒重新整理一次，用來實時更新 Logs / 貼文預覽 -->
+    <meta http-equiv="refresh" content="2; url=/status/{{ job_id }}" />
+    {% endif %}
+    <style>
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+          sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        min-height: 100vh;
+      }
+      .sidebar {
+        width: 320px;
+        background: #f4f4f4;
+        padding: 20px;
+        box-sizing: border-box;
+        border-right: 1px solid #ddd;
+      }
+      .main {
+        flex: 1;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+      h1 {
+        font-size: 20px;
+        margin-bottom: 10px;
+      }
+      h2 {
+        font-size: 16px;
+        margin-top: 20px;
+        margin-bottom: 8px;
+      }
+      form {
+        margin-bottom: 20px;
+        padding: 12px;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+      }
+      label {
+        display: block;
+        margin: 8px 0 4px;
+        font-weight: bold;
+      }
+      input,
+      select {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+      }
+      button {
+        margin-top: 10px;
+        padding: 10px 14px;
+        background: #007acc;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #005fa3;
+      }
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 10px;
+        border-radius: 9999px;
+        font-size: 12px;
+        font-weight: 500;
+        background: #e5e7eb;
+        color: #374151;
+      }
+      .status-badge.running {
+        background: #fee2e2;
+        color: #b91c1c;
+      }
+      .status-badge.done {
+        background: #dcfce7;
+        color: #166534;
+      }
+      .status-badge.error {
+        background: #fee2e2;
+        color: #b91c1c;
+      }
+      .status-badge.loading-dot {
+        margin-left: 6px;
+        width: 6px;
+        height: 6px;
+        border-radius: 9999px;
+        background: #b91c1c;
+        animation: blink 1s linear infinite;
+      }
+      @keyframes blink {
+        0%,
+        50% {
+          opacity: 1;
+        }
+        50.01%,
+        100% {
+          opacity: 0.2;
+        }
+      }
+      .post-card {
+        margin-top: 12px;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 12px 16px;
+        max-width: 820px;
+      }
+      .post-header {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+      .avatar-placeholder {
+        width: 40px;
+        height: 40px;
+        border-radius: 9999px;
+        background: linear-gradient(135deg, #9ca3af, #6b7280);
+      }
+      .author-name {
+        font-weight: 600;
+        font-size: 14px;
+      }
+      .author-handle {
+        font-size: 13px;
+        color: #6b7280;
+      }
+      .post-meta {
+        font-size: 12px;
+        color: #9ca3af;
+        margin-top: 2px;
+      }
+      .post-text {
+        margin: 8px 0 6px 0;
+        font-size: 14px;
+        line-height: 1.6;
+        white-space: pre-wrap;
+      }
+      .post-metrics {
+        font-size: 12px;
+        color: #6b7280;
+        display: flex;
+        gap: 16px;
+        margin-top: 4px;
+      }
+      .top-comments-title {
+        font-size: 13px;
+        color: #4b5563;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      .top-comments-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+      .top-comment-card {
+        background: #f9fafb;
+        border-radius: 12px;
+        padding: 8px 10px;
+        font-size: 13px;
+        line-height: 1.4;
+      }
+      .top-comment-user {
+        font-weight: 600;
+        margin-right: 4px;
+      }
+      .top-comment-likes {
+        font-size: 11px;
+        color: #f97316;
+        font-weight: 600;
+        margin-left: 4px;
+      }
+      .comments {
+        margin-top: 6px;
+        border-top: 1px solid #e5e7eb;
+        padding-top: 8px;
+      }
+      .comments-title {
+        font-size: 12px;
+        color: #9ca3af;
+        margin-bottom: 4px;
+      }
+      .comment-item {
+        font-size: 13px;
+        line-height: 1.4;
+        margin-bottom: 4px;
+      }
+      .comment-user {
+        font-weight: 500;
+        margin-right: 4px;
+      }
+      .comment-likes {
+        font-size: 11px;
+        color: #9ca3af;
+        margin-left: 4px;
+      }
+      .analysis-block {
+        margin-top: 16px;
+        background: #f9fafb;
+        border-radius: 12px;
+        padding: 12px 14px;
+        font-size: 13px;
+        color: #6b7280;
+        max-width: 820px;
+      }
+      .logs {
+        margin-top: 16px;
+        background: #111827;
+        color: #e5e7eb;
+        padding: 12px;
+        border-radius: 6px;
+        min-height: 120px;
+        font-size: 13px;
+        white-space: pre-wrap;
+      }
+    </style>
+  </head>
+  <body>
+    {% set post = post or None %}
+    <div class="sidebar">
+      <h1>Discourse Lens 控制台</h1>
+
+      <h2>Pipeline A</h2>
+      <form action="/run/a" method="post">
+        <label for="url">Threads URL</label>
+        <input
+          type="text"
+          id="url"
+          name="url"
+          placeholder="https://www.threads.net/..."
+        />
+        <button type="submit">執行 Pipeline A</button>
+      </form>
+
+      <h2>Pipeline B</h2>
+      <form action="/run/b" method="post">
+        <label for="keyword">關鍵字</label>
+        <input
+          type="text"
+          id="keyword"
+          name="keyword"
+          placeholder="例：公屋"
+        />
+
+        <label for="max_posts_b">最多抓多少篇？</label>
+        <input
+          type="number"
+          id="max_posts_b"
+          name="max_posts"
+          value="50"
+          min="1"
+        />
+
+        <label for="mode_b">模式</label>
+        <select id="mode_b" name="mode">
+          <option value="ingest">立即 ingest</option>
+          <option value="hotlist">輸出 hotlist.json</option>
+        </select>
+
+        <button type="submit">執行 Pipeline B</button>
+      </form>
+
+      <h2>Pipeline C</h2>
+      <form action="/run/c" method="post">
+        <label for="max_posts_c">最多抓多少篇？</label>
+        <input
+          type="number"
+          id="max_posts_c"
+          name="max_posts"
+          value="50"
+          min="1"
+        />
+
+        <label for="threshold">留言/likes 門檻</label>
+        <input
+          type="number"
+          id="threshold"
+          name="threshold"
+          value="0"
+          min="0"
+        />
+
+        <label for="mode_c">模式</label>
+        <select id="mode_c" name="mode">
+          <option value="ingest">立即 ingest</option>
+          <option value="hotlist">輸出 hotlist.json</option>
+        </select>
+
+        <button type="submit">執行 Pipeline C</button>
+      </form>
+    </div>
+
+    <div class="main">
+      <h2>Pipeline A 狀態</h2>
+      <div
+        class="status-badge
+        {% if status == 'running' or status == 'pending' %}running{% elif status == 'done' %}done{% elif status == 'error' %}error{% endif %}"
+      >
+        Job {{ job_id }} ·
+        {% if status == "pending" %}
+        排隊中…
+        <span class="loading-dot"></span>
+        {% elif status == "running" %}
+        Pipeline A 執行中…
+        <span class="loading-dot"></span>
+        {% elif status == "done" %}
+        完成
+        {% elif status == "error" %}
+        發生錯誤
+        {% else %}
+        找不到這個任務
+        {% endif %}
+      </div>
+
+      {% if status == "done" and post %}
+      <!-- 先顯示：模擬 Threads 留言區（Top 5 高讚 + 留言串），然後才是主文與 metrics -->
+      <div class="post-card">
+        {% set comments = post.comments or [] %}
+        {% if post.comments_by_likes is defined %}
+          {% set top_comments = post.comments_by_likes %}
+        {% else %}
+          {% set top_comments = comments %}
+        {% endif %}
+
+        {% if top_comments and top_comments|length > 0 %}
+        <div class="top-comments">
+          <div class="top-comments-title">🔥 高讚好留言 Top 5</div>
+          <div class="top-comments-grid">
+            {% for c in top_comments[:5] %}
+            <div class="top-comment-card">
+              <div>
+                <span class="top-comment-user">{{ c.user }}</span>
+                <span class="top-comment-likes">👍 {{ c.likes }}</span>
+              </div>
+              <div>{{ c.text }}</div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        {% if comments and comments|length > 0 %}
+        <div class="comments">
+          <div class="comments-title">留言串（截取）</div>
+          {% for c in comments[:10] %}
+          <div class="comment-item">
+            <span class="comment-user">{{ c.user }}</span>
+            <span class="comment-text">{{ c.text }}</span>
+            <span class="comment-likes">👍 {{ c.likes }}</span>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <div style="border-top: 1px solid #e5e7eb; margin-top: 10px; padding-top: 10px;">
+          <div class="post-header">
+            <div class="avatar-placeholder"></div>
+            <div>
+              <div class="author-name">{{ post.author }}</div>
+              <div class="author-handle">@{{ post.author }}</div>
+              <div class="post-meta">
+                Threads · {{ post.metrics.views }} views
+              </div>
+            </div>
+          </div>
+
+          <div class="post-text">
+            {{ post.post_text }}
+          </div>
+
+          <div class="post-metrics">
+            <span>👍 {{ post.metrics.likes }}</span>
+            <span>💬 {{ post.metrics.reply_count }}</span>
+            <span>🔁 {{ post.metrics.repost_count }}</span>
+            <span>📤 {{ post.metrics.share_count }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="analysis-block">
+        <strong>Step 2 / Step 3 分析區（預留）</strong><br />
+        這裡之後會接 Step 2（留言抽樣 + 統計）與 Step 3（DiscourseLens
+        敘事分析）的輸出。現階段先當作 Threads UI 的「戰情室貼文詳情」預覽位。
+      </div>
+      {% endif %}
+
+      <h2>Logs（實時狀態）</h2>
+      <div class="logs">
+        {% if logs %}
+        {{ "\n".join(logs) }}
+        {% else %}
+        （尚無 log）
+        {% endif %}
+      </div>
+    </div>
+  </body>
+</html>
