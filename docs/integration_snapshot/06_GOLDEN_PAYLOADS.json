@@ -1,0 +1,208 @@
+{
+  "before_enrichment": {
+    "db_row_view": {
+      "id": "post-123",
+      "phenomenon_id": null,
+      "phenomenon_status": "pending",
+      "phenomenon_case_id": null,
+      "analysis_version": "v4",
+      "analysis_build_id": "11111111-1111-4111-8111-111111111111",
+      "analysis_is_valid": true,
+      "analysis_invalid_reason": null,
+      "analysis_missing_keys": null,
+      "cluster_summary": { "...": "cluster stats" },
+      "quant_summary": { "...": "quant metrics" },
+      "full_report": "### L1 ...",
+      "raw_json": { "...": "llm raw" },
+      "analysis_json": { "...": "see analysis_json_view" }
+    },
+    "phenomenon_envelope": {
+      "id": null,
+      "status": "pending",
+      "case_id": null,
+      "canonical_name": null,
+      "source": "default"
+    },
+    "analysis_json_view": {
+      "post": {
+        "post_id": "post-123",
+        "author": "alice",
+        "text": "post text ...",
+        "link": "https://threads.net/p/123",
+        "images": [],
+        "timestamp": "2025-01-01T00:00:00",
+        "metrics": { "likes": 10, "views": 100, "replies": 3 }
+      },
+      "phenomenon": {
+        "id": null,
+        "status": "pending",
+        "name": null,
+        "description": "phenomenological note ...",
+        "ai_image": null
+      },
+      "emotional_pulse": { "primary": null, "cynicism": 0.2, "hope": 0.1, "outrage": 0.3, "notes": null },
+      "segments": [
+        { "label": "Cluster 0", "share": 0.6, "samples": [ { "comment_id": "c1", "user": "u1", "text": "...", "likes": 5, "linguistic_features": [] } ], "linguistic_features": [] }
+      ],
+      "narrative_stack": { "l1": "L1 text", "l2": "L2 text", "l3": "L3 text" },
+      "danger": null,
+      "summary": { "one_line": "summary...", "narrative_type": "type..." },
+      "battlefield": { "factions": [ { "label": "Cluster 0", "share": 0.6, "samples": [] } ] },
+      "full_report": "### L1 ...",
+      "analysis_version": "v4",
+      "analysis_build_id": "11111111-1111-4111-8111-111111111111"
+    }
+  },
+  "ops_completion_gate": {
+    "rule": "Pipeline A item completes only if threads_posts.analysis_json or threads_posts.full_report is present for the post_id returned by run_pipeline",
+    "failure": "If missing, job_items fails at analyst/store stage with ANALYSIS_MISSING even if ingest succeeded"
+  },
+  "after_enrichment": {
+    "db_row_view": {
+      "id": "post-123",
+      "phenomenon_id": "22222222-2222-4222-8222-222222222222",
+      "phenomenon_status": "minted",
+      "phenomenon_case_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "analysis_version": "v4",
+      "analysis_build_id": "11111111-1111-4111-8111-111111111111",
+      "analysis_is_valid": true,
+      "analysis_invalid_reason": null,
+      "analysis_missing_keys": null,
+      "cluster_summary": { "...": "cluster stats" },
+      "quant_summary": { "...": "quant metrics" },
+      "full_report": "### L1 ...",
+      "raw_json": { "...": "llm raw" },
+      "analysis_json": { "...": "see analysis_json_view" }
+    },
+    "phenomenon_envelope": {
+      "id": "22222222-2222-4222-8222-222222222222",
+      "status": "minted",
+      "case_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "canonical_name": null,
+      "source": "db_columns"
+    },
+    "analysis_json_view": {
+      "post": {
+        "post_id": "post-123",
+        "author": "alice",
+        "text": "post text ...",
+        "link": "https://threads.net/p/123",
+        "images": [],
+        "timestamp": "2025-01-01T00:00:00",
+        "metrics": { "likes": 10, "views": 100, "replies": 3 }
+      },
+      "phenomenon": {
+        "id": "22222222-2222-4222-8222-222222222222",
+        "status": "minted",
+        "name": null,
+        "description": "phenomenological note ...",
+        "ai_image": null
+      },
+      "phenomenon_status": "minted",
+      "phenomenon_case_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "match_ruleset_version": "v1",
+      "fingerprint_version": "v1",
+      "registry_version": "v1",
+      "emotional_pulse": { "primary": null, "cynicism": 0.2, "hope": 0.1, "outrage": 0.3, "notes": null },
+      "segments": [
+        { "label": "Cluster 0", "share": 0.6, "samples": [ { "comment_id": "c1", "user": "u1", "text": "...", "likes": 5, "linguistic_features": [] } ], "linguistic_features": [] }
+      ],
+      "narrative_stack": { "l1": "L1 text", "l2": "L2 text", "l3": "L3 text" },
+      "danger": null,
+      "summary": { "one_line": "summary...", "narrative_type": "type..." },
+      "battlefield": { "factions": [ { "label": "Cluster 0", "share": 0.6, "samples": [] } ] },
+      "full_report": "### L1 ...",
+      "analysis_version": "v4",
+      "analysis_build_id": "11111111-1111-4111-8111-111111111111"
+    }
+  },
+  "library_index_item": {
+    "id": "22222222-2222-4222-8222-222222222222",
+    "canonical_name": "UNKNOWN",
+    "description": "new civic meme …",
+    "status": "provisional",
+    "total_posts": 4,
+    "last_seen_at": "2025-01-10T12:00:00Z"
+  },
+  "library_shelf": {
+    "meta": {
+      "id": "22222222-2222-4222-8222-222222222222",
+      "canonical_name": "UNKNOWN",
+      "description": "new civic meme …",
+      "status": "provisional"
+    },
+    "stats": {
+      "total_posts": 4,
+      "total_likes": 820,
+      "last_seen_at": "2025-01-10T12:00:00Z"
+    },
+    "recent_posts": [
+      {
+        "id": "post-123",
+        "created_at": "2025-01-10T12:00:00Z",
+        "snippet": "post text …",
+        "like_count": 120,
+        "phenomenon_status": "minted"
+      }
+    ]
+  },
+  "comments_by_post": {
+    "post_id": "post-123",
+    "total": 3,
+    "items": [
+      {"id": "c1", "author_handle": "user_a", "text": "comment text …", "like_count": 12, "reply_count": 0, "created_at": "2025-01-10T12:00:00Z"}
+    ]
+  },
+  "comments_search": {
+    "items": [
+      {"id": "c1", "post_id": "post-123", "author_handle": "user_a", "text": "女權 …", "like_count": 12, "created_at": "2025-01-10T12:00:00Z"}
+    ]
+  }
+},
+"batch_runner_log": {
+  "keyword": "example",
+  "state_file": "batch_state.json",
+  "summary": "Batch run finished: total=50, completed=42, rl=0, consecutive_failures=0",
+  "sample_url_state": {
+    "https://www.threads.net/@user/post/123": {
+      "status": "succeeded",
+      "attempts": 1,
+      "last_error": null
+    }
+  }
+},
+"batch_preview_example": {
+  "request": {
+    "keyword": "台積電",
+    "urls": ["https://www.threads.net/@user/post/1"],
+    "mode": "preview",
+    "max_posts": 20
+  },
+  "response": {
+    "discovery_count": 12,
+    "deduped_count": 8,
+    "selected_count": 5,
+    "skipped_exists": 2,
+    "skipped_policy": 1,
+    "items": [
+      { "canonical_url": "https://www.threads.net/@user/post/1", "decision": "selected", "reason": null },
+      { "canonical_url": "https://www.threads.net/@user/post/2", "decision": "skipped_exists", "reason": "exists", "existing_post_id": "abc" }
+    ]
+  }
+},
+"batch_run_example": {
+  "request": {
+    "mode": "run",
+    "pipeline_mode": "full",
+    "concurrency": 2,
+    "urls": ["https://www.threads.net/@user/post/1", "https://www.threads.net/@user/post/2"]
+  },
+  "response": {
+    "selected_count": 2,
+    "success_count": 2,
+    "items": [
+      { "canonical_url": "https://www.threads.net/@user/post/1", "status": "succeeded", "post_id": "post-123", "phenomenon_id": "phen-1" },
+      { "canonical_url": "https://www.threads.net/@user/post/2", "status": "succeeded", "post_id": "post-456", "phenomenon_id": "phen-2" }
+    ]
+  }
+}

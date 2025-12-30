@@ -1,0 +1,57 @@
+name: Auto Backup Release
+
+on:
+  schedule:
+    - cron: "0 0 * * *"  # 08:00 Asia/Hong_Kong = 00:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Read version
+        id: version
+        run: |
+          python - <<'PY'
+          from version import version
+          import os
+          output_file = os.environ.get("GITHUB_OUTPUT")
+          if not output_file:
+            raise SystemExit("GITHUB_OUTPUT is not set")
+          with open(output_file, "a", encoding="utf-8") as f:
+            f.write(f"current={version}\n")
+          PY
+
+      - name: Create archive
+        run: |
+          zip -r "discourse_lens_v${{ steps.version.outputs.current }}.zip" .
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: discourse_lens_v${{ steps.version.outputs.current }}
+          path: discourse_lens_v${{ steps.version.outputs.current }}.zip
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.version.outputs.current }}
+          name: Release v${{ steps.version.outputs.current }}
+          body: |
+            Automated backup release for version ${{ steps.version.outputs.current }}.
+          files: discourse_lens_v${{ steps.version.outputs.current }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

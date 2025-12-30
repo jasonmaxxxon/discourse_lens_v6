@@ -1,0 +1,207 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/",
+      "function": "read_root",
+      "file": "webapp/app.py",
+      "line": 490
+    },
+    {
+      "method": "GET",
+      "path": "/run/a",
+      "function": "run_pipeline_a_get",
+      "file": "webapp/app.py",
+      "line": 506
+    },
+    {
+      "method": "POST",
+      "path": "/run/a",
+      "function": "run_pipeline_a",
+      "file": "webapp/app.py",
+      "line": 515
+    },
+    {
+      "method": "POST",
+      "path": "/run/b",
+      "function": "run_pipeline_b",
+      "file": "webapp/app.py",
+      "line": 564
+    },
+    {
+      "method": "POST",
+      "path": "/run/c",
+      "function": "run_pipeline_c",
+      "file": "webapp/app.py",
+      "line": 602
+    },
+    {
+      "method": "GET",
+      "path": "/status/{job_id}",
+      "function": "get_status",
+      "file": "webapp/app.py",
+      "line": 639
+    },
+    {
+      "method": "GET",
+      "path": "/proxy_image",
+      "function": "proxy_image",
+      "file": "webapp/app.py",
+      "line": 712
+    },
+    {
+      "method": "GET",
+      "path": "/x",
+      "function": "?",
+      "file": ".codex/tools/dump_routes.py",
+      "line": 4
+    },
+    {
+      "method": "GET",
+      "path": "/",
+      "function": "list_jobs",
+      "file": "webapp/routers/jobs.py",
+      "line": 11
+    },
+    {
+      "method": "POST",
+      "path": "/",
+      "function": "create_and_run_job",
+      "file": "webapp/routers/jobs.py",
+      "line": 29
+    },
+    {
+      "method": "GET",
+      "path": "/{job_id}",
+      "function": "get_job_status",
+      "file": "webapp/routers/jobs.py",
+      "line": 42
+    },
+    {
+      "method": "GET",
+      "path": "/{job_id}/items",
+      "function": "get_job_items_only",
+      "file": "webapp/routers/jobs.py",
+      "line": 52
+    },
+    {
+      "method": "GET",
+      "path": "/{job_id}/summary",
+      "function": "get_job_summary",
+      "file": "webapp/routers/jobs.py",
+      "line": 68
+    },
+    {
+      "method": "POST",
+      "path": "/run/batch",
+      "function": "run_pipeline_b_backend_api",
+      "file": "webapp/routers/api.py",
+      "line": 197
+    },
+    {
+      "method": "POST",
+      "path": "/run",
+      "function": "api_run_default",
+      "file": "webapp/routers/api.py",
+      "line": 221
+    },
+    {
+      "method": "POST",
+      "path": "/run/{pipeline}",
+      "function": "api_run_pipeline",
+      "file": "webapp/routers/api.py",
+      "line": 235
+    },
+    {
+      "method": "GET",
+      "path": "/status/{job_id}",
+      "function": "api_status",
+      "file": "webapp/routers/api.py",
+      "line": 290
+    },
+    {
+      "method": "GET",
+      "path": "/posts",
+      "function": "list_posts",
+      "file": "webapp/routers/api.py",
+      "line": 307
+    },
+    {
+      "method": "GET",
+      "path": "/analysis-json/{post_id}",
+      "function": "get_analysis_json",
+      "file": "webapp/routers/api.py",
+      "line": 401
+    },
+    {
+      "method": "GET",
+      "path": "/library/phenomena",
+      "function": "list_library_phenomena",
+      "file": "webapp/routers/api.py",
+      "line": 446
+    },
+    {
+      "method": "GET",
+      "path": "/library/phenomena/{phenomenon_id}",
+      "function": "get_library_phenomenon",
+      "file": "webapp/routers/api.py",
+      "line": 482
+    },
+    {
+      "method": "POST",
+      "path": "/library/phenomena/{phenomenon_id}/promote",
+      "function": "promote_phenomenon",
+      "file": "webapp/routers/api.py",
+      "line": 545
+    },
+    {
+      "method": "GET",
+      "path": "/debug/phenomenon/match/{post_id}",
+      "function": "debug_phenomenon_match",
+      "file": "webapp/routers/api.py",
+      "line": 574
+    },
+    {
+      "method": "GET",
+      "path": "/comments/by-post/{post_id}",
+      "function": "comments_by_post",
+      "file": "webapp/routers/api.py",
+      "line": 622
+    },
+    {
+      "method": "GET",
+      "path": "/comments/search",
+      "function": "comments_search",
+      "file": "webapp/routers/api.py",
+      "line": 650
+    },
+    {
+      "method": "GET",
+      "path": "/debug/latest-post",
+      "function": "get_latest_post_debug",
+      "file": "webapp/routers/api.py",
+      "line": 668
+    },
+    {
+      "method": "POST",
+      "path": "/debug/phenomenon/backfill_from_json",
+      "function": "backfill_phenomenon_from_json",
+      "file": "webapp/routers/api.py",
+      "line": 698
+    },
+    {
+      "method": "GET",
+      "path": "/analysis/{post_id}",
+      "function": "get_analysis",
+      "file": "webapp/routers/api.py",
+      "line": 744
+    },
+    {
+      "method": "GET",
+      "path": "/run/batch",
+      "function": "deprecated_run_batch",
+      "file": "webapp/routers/api.py",
+      "line": 769
+    }
+  ]
+}

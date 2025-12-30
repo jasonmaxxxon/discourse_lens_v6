@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Discourse Lens 控制台</title>
+    <style>
+      :root {
+        --bg-body: #f3f4f6;
+        --bg-sidebar: #ffffff;
+        --bg-card: #ffffff;
+        --border-subtle: #e5e7eb;
+        --text-main: #111827;
+        --text-muted: #6b7280;
+        --text-soft: #9ca3af;
+        --primary: #2563eb;
+        --primary-hover: #1d4ed8;
+        --accent: #f97316;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        background: var(--bg-body);
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text",
+          system-ui, -system-ui, "Segoe UI", Roboto, "Helvetica Neue",
+          "Noto Sans TC", sans-serif;
+        color: var(--text-main);
+      }
+
+      .sidebar {
+        width: 320px;
+        background: var(--bg-sidebar);
+        border-right: 1px solid var(--border-subtle);
+        padding: 20px 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        position: sticky;
+        top: 0;
+        align-self: flex-start;
+        min-height: 100vh;
+        box-shadow: 2px 0 12px rgba(15, 23, 42, 0.03);
+      }
+
+      .sidebar-title {
+        font-size: 18px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        margin-bottom: 4px;
+      }
+
+      .sidebar-subtitle {
+        font-size: 12px;
+        color: var(--text-soft);
+        margin-bottom: 8px;
+      }
+
+      .section-label {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--text-soft);
+        margin-bottom: 4px;
+      }
+
+      .pipeline-card {
+        padding: 16px 14px 18px;
+        background: var(--bg-card);
+        border-radius: 14px;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 6px 14px rgba(15, 23, 42, 0.04);
+      }
+
+      .pipeline-title {
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #374151;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      label {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text-muted);
+      }
+
+      input,
+      select {
+        width: 100%;
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 1px solid var(--border-subtle);
+        font-size: 13px;
+        outline: none;
+        background: #f9fafb;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease,
+          background 0.15s ease;
+      }
+
+      input:focus,
+      select:focus {
+        border-color: var(--primary);
+        background: #ffffff;
+        box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.3);
+      }
+
+      button {
+        margin-top: 4px;
+        padding: 9px 12px;
+        border-radius: 999px;
+        border: none;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        background: linear-gradient(135deg, var(--primary), #1d4ed8);
+        color: #ffffff;
+        box-shadow: 0 8px 18px rgba(37, 99, 235, 0.28);
+        transition: background 0.15s ease, transform 0.1s ease,
+          box-shadow 0.15s ease;
+        width: 100%;
+      }
+
+      button:hover {
+        background: linear-gradient(135deg, var(--primary-hover), #1e40af);
+        transform: translateY(-1px);
+        box-shadow: 0 10px 22px rgba(37, 99, 235, 0.32);
+      }
+
+      button:active {
+        transform: translateY(0);
+        box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+      }
+
+      .main {
+        flex: 1;
+        padding: 24px 28px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .main-inner {
+        width: 100%;
+        max-width: 960px;
+      }
+
+      .main-header {
+        margin-bottom: 16px;
+      }
+
+      .main-title {
+        font-size: 20px;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+        margin: 0;
+      }
+
+      .main-subtitle {
+        margin-top: 4px;
+        font-size: 13px;
+        color: var(--text-muted);
+      }
+
+      .result-card {
+        margin-top: 16px;
+        padding: 16px 18px;
+        background: var(--bg-card);
+        border-radius: 16px;
+        border: 1px solid var(--border-subtle);
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+        font-size: 13px;
+        color: #374151;
+        white-space: pre-wrap;
+        min-height: 120px;
+      }
+
+      .result-placeholder {
+        color: var(--text-soft);
+        font-style: italic;
+      }
+
+      @media (max-width: 900px) {
+        body {
+          flex-direction: column;
+        }
+
+        .sidebar {
+          position: static;
+          width: 100%;
+          min-height: auto;
+          border-right: none;
+          border-bottom: 1px solid var(--border-subtle);
+          box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+        }
+
+        .main {
+          padding: 18px 16px 28px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sidebar">
+      <div>
+        <div class="sidebar-title">Discourse Lens 控制台</div>
+        <div class="sidebar-subtitle">
+          Threads 抓取 · 熱帖探索 · 留言敘事樣本庫
+        </div>
+      </div>
+
+      <div class="pipeline-card">
+        <div class="section-label">Pipeline A</div>
+        <div class="pipeline-title">單帖詳情 · 手動輸入 URL</div>
+        <form action="/run/a" method="post">
+          <label for="url">Threads URL</label>
+          <input
+            type="text"
+            id="url"
+            name="url"
+            placeholder="https://www.threads.net/..."
+          />
+          <button type="submit">執行 Pipeline A</button>
+        </form>
+      </div>
+
+      <div class="pipeline-card">
+        <div class="section-label">Pipeline B</div>
+        <div class="pipeline-title">關鍵字搜尋 · 熱帖清單 / Ingest</div>
+        <form action="/run/b" method="post">
+          <label for="keyword">關鍵字</label>
+          <input
+            type="text"
+            id="keyword"
+            name="keyword"
+            placeholder="例：公屋"
+          />
+
+          <label for="max_posts_b">最多抓多少篇？</label>
+          <input
+            type="number"
+            id="max_posts_b"
+            name="max_posts"
+            value="50"
+            min="1"
+          />
+
+          <label for="mode_b">模式</label>
+          <select id="mode_b" name="mode">
+            <option value="ingest">立即 ingest</option>
+            <option value="hotlist">輸出 hotlist.json</option>
+          </select>
+
+          <button type="submit">執行 Pipeline B</button>
+        </form>
+      </div>
+
+      <div class="pipeline-card">
+        <div class="section-label">Pipeline C</div>
+        <div class="pipeline-title">個人主頁 · 即時牆樣本</div>
+        <form action="/run/c" method="post">
+          <label for="max_posts_c">最多抓多少篇？</label>
+          <input
+            type="number"
+            id="max_posts_c"
+            name="max_posts"
+            value="50"
+            min="1"
+          />
+
+          <label for="threshold">留言 / likes 門檻</label>
+          <input
+            type="number"
+            id="threshold"
+            name="threshold"
+            value="0"
+            min="0"
+          />
+
+          <label for="mode_c">模式</label>
+          <select id="mode_c" name="mode">
+            <option value="ingest">立即 ingest</option>
+            <option value="hotlist">輸出 hotlist.json</option>
+          </select>
+
+          <button type="submit">執行 Pipeline C</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="main-inner">
+        <div class="main-header">
+          <h1 class="main-title">Pipeline B / C 結果</h1>
+          <div class="main-subtitle">
+            執行關鍵字抓取或 Home feed 抽樣後，系統訊息會顯示在這裡。
+          </div>
+        </div>
+
+        <div class="result-card">
+          {% if result %}
+          {{ result }}
+          {% else %}
+          <span class="result-placeholder">
+            （執行 Pipeline B / C 後，這裡會顯示結果訊息）
+          </span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

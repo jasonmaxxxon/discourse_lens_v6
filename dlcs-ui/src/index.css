@@ -1,0 +1,61 @@
+@import "./styles/theme.css";
+@import "./styles/components.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--bg-app);
+  color: var(--text-primary);
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* Utilities */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.neon-text-shadow {
+  text-shadow: 0 0 10px rgba(244, 37, 192, 0.5);
+}
+
+.bubble-glow-primary {
+  box-shadow: 0 0 15px rgba(244, 37, 192, 0.4);
+}
+.bubble-glow-yellow {
+  box-shadow: 0 0 15px rgba(204, 255, 0, 0.4);
+}
+.bubble-glow-cyan {
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1f2937;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0b1021;
+}

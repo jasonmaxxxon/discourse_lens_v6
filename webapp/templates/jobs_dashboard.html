@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Logistics Control Plane</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: { "primary": "#137fec", "background-light": "#f6f7f8", "background-dark": "#101922", "industrial-border": "#cbd5e1" },
+                    fontFamily: { "display": ["Inter", "sans-serif"], "mono": ["JetBrains Mono", "monospace"] },
+                },
+            },
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 0; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body class="bg-background-light text-slate-900 font-display min-h-screen flex flex-col overflow-hidden"
+      x-data="logisticsApp()" x-init="init()">
+
+<header class="h-12 flex items-center justify-between bg-white border-b border-industrial-border px-4 shrink-0 z-20">
+    <div class="flex items-center gap-3">
+        <div class="size-6 bg-slate-900 flex items-center justify-center text-white">
+            <span class="material-symbols-outlined text-sm">grid_view</span>
+        </div>
+        <h1 class="text-sm font-bold uppercase tracking-widest text-slate-900">DiscourseLens <span class="text-slate-500 font-normal normal-case">Logistics Control Plane</span></h1>
+    </div>
+    <div class="flex items-center gap-4 text-xs font-mono">
+        <div class="flex items-center gap-2">
+            <span class="text-slate-500">SYSTEM:</span>
+            <span class="text-emerald-600 font-bold" x-text="connected ? 'ONLINE' : 'OFFLINE'">ONLINE</span>
+        </div>
+        <div class="flex items-center gap-2 cursor-pointer hover:text-primary" @click="dispatchJob()">
+            <span class="material-symbols-outlined text-[18px] text-primary">play_circle</span>
+            <span class="font-bold text-primary">NEW JOB</span>
+        </div>
+    </div>
+</header>
+
+<main class="flex-1 flex flex-col h-[calc(100vh-48px)]">
+    <section class="flex flex-col bg-slate-50 border-b-4 border-slate-300 shrink-0 h-[40vh] min-h-[300px]">
+        <div class="flex items-stretch border-b border-industrial-border bg-white divide-x divide-industrial-border h-14 shrink-0">
+            <div class="flex-1 px-4 flex items-center justify-between gap-4 max-w-xs">
+                <span class="text-xs font-bold uppercase text-slate-500 tracking-wider">Active Jobs</span>
+                <div class="bg-emerald-100 text-emerald-800 px-3 py-1 text-xs font-mono font-bold border border-emerald-200 rounded-none flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[14px] animate-pulse">radio_button_checked</span>
+                    <span x-text="activeJobsCount + ' Running'">0 Running</span>
+                </div>
+            </div>
+            <div class="flex-grow bg-slate-50 flex items-center justify-end px-4">
+                <button class="text-xs font-bold uppercase text-slate-500 hover:text-primary flex items-center gap-1" @click="fetchJobs()">
+                    <span class="material-symbols-outlined text-[16px]" :class="loading ? 'animate-spin' : ''">refresh</span>
+                    Refresh
+                </button>
+            </div>
+        </div>
+
+        <div class="flex-1 overflow-auto bg-white">
+            <table class="w-full border-collapse text-left">
+                <thead class="bg-slate-50 sticky top-0 z-10">
+                    <tr>
+                        <th class="border-b border-r border-industrial-border px-3 py-2 text-[10px] font-bold uppercase text-slate-500 w-32">Job ID</th>
+                        <th class="border-b border-r border-industrial-border px-3 py-2 text-[10px] font-bold uppercase text-slate-500 w-24">Type</th>
+                        <th class="border-b border-r border-industrial-border px-3 py-2 text-[10px] font-bold uppercase text-slate-500">Progress</th>
+                        <th class="border-b border-r border-industrial-border px-3 py-2 text-[10px] font-bold uppercase text-slate-500 w-32">Status</th>
+                        <th class="border-b border-industrial-border px-3 py-2 text-[10px] font-bold uppercase text-slate-500 w-24">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="text-xs font-mono">
+                    <template x-for="job in jobs" :key="job.id">
+                        <tr class="hover:bg-slate-50 group cursor-pointer" 
+                            :class="selectedJobId === job.id ? 'bg-blue-50' : ''"
+                            @click="selectJob(job.id)">
+                            <td class="border-b border-r border-industrial-border px-3 py-2 font-bold text-primary" x-text="job.id.slice(0,8)"></td>
+                            <td class="border-b border-r border-industrial-border px-3 py-2" x-text="job.pipeline_type"></td>
+                            <td class="border-b border-r border-industrial-border px-3 py-2">
+                                <div class="flex items-center gap-2">
+                                    <div class="h-2 flex-1 bg-slate-200 border border-slate-300 relative">
+                                        <div class="absolute left-0 top-0 bottom-0 bg-emerald-500 transition-all duration-500"
+                                             :style="`width: ${(job.processed_count / Math.max(job.total_count, 1)) * 100}%`"></div>
+                                    </div>
+                                    <span class="text-[10px]" x-text="job.processed_count + '/' + job.total_count"></span>
+                                </div>
+                            </td>
+                            <td class="border-b border-r border-industrial-border px-3 py-2 font-bold"
+                                :class="{
+                                    'text-emerald-700': job.status === 'completed',
+                                    'text-amber-700': job.status === 'processing',
+                                    'text-red-700': job.status === 'failed'
+                                }"
+                                x-text="job.status"></td>
+                            <td class="border-b border-industrial-border px-3 py-2">
+                                <button class="bg-white border border-slate-300 text-slate-600 px-2 py-0.5 text-[10px] uppercase font-bold w-full">View</button>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="flex-1 flex flex-col bg-slate-50 overflow-hidden relative border-t border-industrial-border">
+        <div class="h-12 border-b border-industrial-border bg-white flex items-center justify-between px-6 shrink-0 shadow-sm z-10">
+            <div class="flex items-center gap-6" x-show="selectedJob">
+                <h3 class="text-sm font-bold uppercase text-slate-900 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-slate-400">biotech</span>
+                    Job: <span class="text-primary font-mono ml-1" x-text="selectedJob?.id?.slice(0,8)"></span>
+                </h3>
+                <div class="h-6 w-px bg-industrial-border"></div>
+                <div class="flex gap-4 text-xs font-mono text-slate-500">
+                     <span>Success: <strong class="text-emerald-600" x-text="selectedJob?.success_count"></strong></span>
+                     <span>Failed: <strong class="text-red-600" x-text="selectedJob?.failed_count"></strong></span>
+                </div>
+            </div>
+            <div x-show="!selectedJob" class="text-xs text-slate-400 font-mono italic px-4">Select a job to view forensics</div>
+        </div>
+
+        <div class="flex-1 overflow-auto bg-white" x-show="selectedJob">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-white sticky top-0">
+                    <tr>
+                        <th class="border-b border-r border-industrial-border px-4 py-2 text-[10px] font-bold uppercase text-slate-500 w-48">Target ID</th>
+                        <th class="border-b border-r border-industrial-border px-4 py-2 text-[10px] font-bold uppercase text-slate-500 w-24">Stage</th>
+                        <th class="border-b border-r border-industrial-border px-4 py-2 text-[10px] font-bold uppercase text-slate-500">Error Log</th>
+                        <th class="border-b border-industrial-border px-4 py-2 text-[10px] font-bold uppercase text-slate-500 w-32">Updated</th>
+                    </tr>
+                </thead>
+                <tbody class="font-mono text-xs">
+                    <template x-for="item in items" :key="item.id">
+                        <tr class="hover:bg-slate-50 group border-b border-slate-100">
+                            <td class="px-4 py-2 border-r border-slate-100 text-slate-700 truncate max-w-[200px]" x-text="item.target_id"></td>
+                            <td class="px-4 py-2 border-r border-slate-100">
+                                <span class="px-1.5 py-0.5 border text-[10px] font-bold"
+                                      :class="{
+                                          'bg-emerald-50 text-emerald-700 border-emerald-200': item.status === 'completed',
+                                          'bg-red-50 text-red-700 border-red-200': item.status === 'failed',
+                                          'bg-amber-50 text-amber-700 border-amber-200': item.status === 'processing'
+                                      }"
+                                      x-text="item.stage"></span>
+                            </td>
+                            <td class="px-4 py-2 border-r border-slate-100 text-red-600 truncate" x-text="item.error_log || '-'"></td>
+                            <td class="px-4 py-2 text-slate-400" x-text="new Date(item.updated_at).toLocaleTimeString()"></td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<script>
+    function logisticsApp() {
+        return {
+            jobs: [],
+            selectedJobId: null,
+            selectedJob: null,
+            items: [],
+            activeJobsCount: 0,
+            connected: false,
+            loading: false,
+            isPolling: false,
+
+            async init() {
+                this.connected = true;
+                await this.poll();
+                // Auto-refresh loop
+                setInterval(() => this.poll(), 6000);
+            },
+
+            async poll() {
+                if (this.isPolling) return;
+                this.isPolling = true;
+                try {
+                    await this.fetchJobs();
+                    if (this.selectedJobId) {
+                        await this.fetchItems(this.selectedJobId);
+                    }
+                } finally {
+                    this.isPolling = false;
+                }
+            },
+
+            async fetchJobs() {
+                this.loading = true;
+                try {
+                    const res = await fetch('/api/jobs/'); // Fetch List
+                    if (res.ok) {
+                        this.jobs = await res.json();
+                        // Calc Active Jobs
+                        this.activeJobsCount = this.jobs.filter(j => j.status === 'processing').length;
+                        
+                        // Auto-select first job if none selected
+                        if (!this.selectedJobId && this.jobs.length > 0) {
+                            this.selectJob(this.jobs[0].id);
+                        }
+                    }
+                } catch(e) { console.error(e); this.connected = false; }
+                this.loading = false;
+            },
+
+            async selectJob(id) {
+                this.selectedJobId = id;
+                this.selectedJob = this.jobs.find(j => j.id === id);
+                await this.fetchItems(id);
+            },
+
+            async fetchItems(jobId) {
+                try {
+                    const res = await fetch(`/api/jobs/${jobId}/items`);
+                    if (res.ok) {
+                        this.items = await res.json();
+                    }
+                } catch(e) { console.error(e); }
+            },
+
+            async dispatchJob() {
+                // Quick Action: Dispatch a Mock Job B
+                if(!confirm("Dispatch new B-Pipeline Job?")) return;
+                try {
+                    await fetch('/api/jobs/', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            pipeline_type: 'B', mode: 'ingest', input_config: {mock: true}
+                        })
+                    });
+                    this.fetchJobs();
+                } catch(e) { alert("Dispatch Failed"); }
+            }
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,253 @@
+## 方法論核心｜Critical Discourse Analysis Framework
+
+> 目的：
+> 
+> 
+> 建立一套跨語言學、傳播學與社會學的多層語篇分析系統，
+> 
+> 以揭示語言如何在社交媒體與公共話語中建構權力、意識形態與心理操控。
+> 
+
+---
+
+## I. 學科定位與理論源流
+
+### 1. 傳播學的跨學科起源
+
+根據 **Rogers & Chaffee (1993)**，《*Journal of Communication*》指出：
+
+> 在 Schramm 的統一願景出現前，傳播研究分布於三大傳統：
+> 
+> 
+> 社會學（媒介效果）、心理學（說服實驗）與政治學（宣傳分析）。
+> 
+> 後來結合控制論（Wiener, 1950）與資訊理論（Shannon & Weaver, 1949）而形成現代傳播學。
+> 
+
+**延伸意義：**
+
+DiscourseLens 承襲此跨學科精神，整合：
+
+- **語用學**：Austin (1962), Searle (1969)
+- **批判語篇分析 (CDA)**：Fairclough (1995), van Dijk (2012)
+- **傳播學與宣傳學**：Lasswell (1927), Jowett & O'Donnell (2012)
+- **系統功能語言學 (SFL)**：Martin & White (2005)
+
+---
+
+## II. 方法論總體結構
+
+| 層級 | 名稱 | 理論根基 | 主要學派 | 分析焦點 |
+| --- | --- | --- | --- | --- |
+| L0 | Locutionary | Austin (1962) | 語用學 | 語句表層 |
+| L1 | Illocutionary | Searle (1969) | 語用學 | 說話者意圖 |
+| L2 | Strategic | Fairclough (1995), Jowett & O'Donnell (2012) | CDA / Propaganda | 語言與權力 |
+| L3 | Ideological | van Dijk (2012), Bittman (1985), Schuman (1984) | 意識形態分析 | 社會信念與操控 |
+| Pattern | Framing / Narrative | Entman (1993), Labov (1972) | 認知語篇學 | 框架與敘事結構 |
+| Tone | Appraisal | Martin & White (2005) | SFL | 語氣、情緒、立場 |
+| Methodology | Reliability / Interpretation | Krippendorff (2004), Macnamara (2018) | 質性內容分析 | 嚴謹度與詮釋性 |
+
+---
+
+## III. 理論模組詳解
+
+### A. 語用層（L0–L1）
+
+**Speech Act Theory — Austin (1962); Searle (1969)**
+
+Austin 將語言分為三類行為：
+
+1. Locutionary Act（言說）
+2. Illocutionary Act（施事）
+3. Perlocutionary Act（反應）
+
+Searle 擴展為五大類：**斷言、指令、承諾、表達、宣告**。
+
+→ 語句不僅傳達資訊，而是執行社會行為。
+
+> 應用於 DiscourseLens：辨識語篇的「語意意圖密度」作為分層依據。
+> 
+
+---
+
+### B. 批判層（L2）
+
+**Critical Discourse Analysis — Fairclough (1995); van Dijk (2012)**
+
+Fairclough 提出三維架構：
+
+1. Text
+2. Discourse Practice
+3. Social Practice
+
+van Dijk (2012) 指出意識形態是「群體信念的社會認知結構」，
+
+語篇透過重複與再現，使支配結構合法化。
+
+> 目標：追蹤權力如何被語言「自然化」。
+> 
+
+---
+
+### C. 操控層（L3）
+
+**Ideological Manipulation — Lasswell → Bittman → Schuman → Cambridge Analytica**
+
+- **Lasswell (1927)**：
+    
+    宣傳即「透過操控重要符號來管理集體態度」。
+    
+- **Bittman (1985)**：揭露蘇聯「主動措施（Active Measures）」
+- **Schuman (1984)**：提出「意識形態顛覆（Ideological Diversion）」
+- **Guadagno et al. (2024)**：將其延伸為「網絡心理操作」
+- **Robillard (2021)**：界定現代 PSYOP 與軟戰（Soft War）形式
+- **Studia Wschodnioeuropejskie (2023)**：證實 *Cambridge Analytica* 的心理微定向是當代顛覆技術
+
+> DiscourseLens L3 模型：
+> 
+> 
+> Demoralization → Destabilization → Crisis → Normalization
+> 
+
+---
+
+### D. 敘事與框架層（Pattern 模組）
+
+**1️⃣ Framing — Entman (1993); Guenther et al. (2020)**
+
+> “To select some aspects of a perceived reality and make them more salient…”
+> 
+
+**四要素：**
+
+1. Problem Definition
+2. Causal Attribution
+3. Moral Evaluation
+4. Treatment Recommendation
+
+（操作化版本來自 Guenther et al., 2020）
+
+**2️⃣ Narrative Structure — Labov (1972); Labov & Waletzky (1967)**
+
+七要素：Abstract / Orientation / Complicating Action / **Evaluation** / Peak / Resolution / Coda
+
+→ *Evaluation* 是揭示情緒與立場的關鍵。
+
+**3️⃣ Agenda-Setting — Semujju (2013)**
+
+Framing 即「第二層議程設定」，突顯屬性使特定觀點顯得更重要。
+
+---
+
+### E. 語氣與立場層（Tone 模組）
+
+**Appraisal Theory — Martin & White (2005); Yao (2024); Mescht (2015)**
+
+- 屬於系統功能語言學（SFL）的「人際功能 (Interpersonal Function)」延伸
+- 三大子系統：
+    - **Attitude**（情感／倫理／審美）
+    - **Engagement**（立場開放度）
+    - **Graduation**（情緒幅度）
+
+> DiscourseLens Tone 模型：
+> 
+> 
+> Emotion (Affect) × Judgement × Appreciation × Degree (Force)
+> 
+
+---
+
+### F. 方法論模組（Methodology & Reliability）
+
+**1️⃣ 詮釋深度 — Krippendorff (2004); Rofik (2020)**
+
+> 內容分析必須先回答「文本為何存在、它們意味著什麼」。
+> 
+> 
+> → 分析焦點不僅在分類，更在意義生成。
+> 
+
+**2️⃣ 信度一致性 — Stefanic et al. (2016)**
+
+> α ≥ 0.80 代表高信度（Krippendorff’s Alpha = 0.89）。
+> 
+> 
+> → DiscourseLens 的多分析員標註應達此水準。
+
+
+**3️⃣ 方法整合 — Macnamara (2018)**
+
+> 質性內容分析結合修辭、敘事、話語、符號與詮釋分析，
+> 
+> 
+> 是跨理論整合的研究方法。
+> 
+
+---
+
+## IV. 綜合結構圖
+
+```
+Speech Act (L0–L1)
+   ↓
+CDA / Power (L2)
+   ↓
+Ideology / PsyOps (L3)
+   ↓
+Pattern: Framing + Narrative
+   ↓
+Tone: Appraisal
+   ↓
+Methodology: Reliability + Interpretation
+
+```
+
+---
+
+## V. 方法論核心信條
+
+| 原則 | 說明 | 核心理論 |
+| --- | --- | --- |
+| 詮釋性 | 語篇分析應回應文本「為何存在」與「意義何在」。 | Krippendorff (2004) |
+| 一致性 | 多分析者或模型的語義標註一致性應達 α ≥ 0.80。 | Stefanic et al. (2016) |
+| 多層結構 | L0–L3 反映語篇的社會操作深度。 | Austin, Fairclough, van Dijk |
+| 意義突顯 | Framing 與 Tone 共同構成意義顯化機制。 | Entman (1993); Martin & White (2005) |
+| 系統整合 | 本框架為跨理論整合式詮釋分析系統。 | Macnamara (2018) |
+
+---
+
+## 📚 參考文獻（References）
+
+- Austin, J. L. (1962). *How to Do Things with Words.* Oxford University Press.
+- Searle, J. R. (1969). *Speech Acts: An Essay in the Philosophy of Language.* Cambridge University Press.
+- Fairclough, N. (1995). *Critical Discourse Analysis: The Critical Study of Language.* Longman.
+- van Dijk, T. A. (2012). *Discourse and Knowledge: A Sociocognitive Approach.* Cambridge University Press.
+- Lasswell, H. D. (1927). *Propaganda Technique in the World War.* MIT Press.
+- Bittman, L. (1985). *The KGB and Soviet Disinformation.* Pergamon-Brassey’s.
+- Schuman, T. (1984). *Love Letter to America.* Maxims Books.
+- Guadagno, R., Olivieri, A., & Kimbrough, A. (2024). *Social Media in the Aftermath of the 2016 US Presidential Election.* *European Conference on Cyber Warfare and Security.*
+- Robillard, M. (2021). *Counter-Terrorism and PSYOP.* In *Routledge Handbook of Counter-Terrorism and Counter-Insurgency.*
+- Górnikiewicz, M., Mitkow, S., Sługocka, E., & Skrzypek, A. (2023). The methodology of the Russian-Ukrainian Conflict as a Trigger of the Evolution of Hybrid Information Operations. Studia Wschodnioeuropejskie, (19-2), 31–44. [https://doi.org/10.31971/24500267.20](https://doi.org/10.31971/24500267.20)
+- Entman, R. M. (1993). *Framing: Toward Clarification of a Fractured Paradigm.* *Journal of Communication,* 43(4), 51–58.
+- Guenther, L. et al. (2020). *Strategic Framing and Social Media Engagement.* *Social Media + Society,* 6(1).
+- Labov, W. (1972). *Language in the Inner City.* University of Pennsylvania Press.
+- Semujju, B. (2013). *Climate Change in Ugandan Media.* *Journal of African Media Studies,* 5(3), 337–352.
+- Martin, J. R., & White, P. R. R. (2005). *The Language of Evaluation: Appraisal in English.* Palgrave Macmillan.
+- Yao, Y. (2024). *Attitudinal Resources of Shaanxi Red Culture News Reports.* *AJHSS,* 7(5).
+- Mescht, C. (2015). *Reading & Writing,* 6(1).
+- Krippendorff, K. (2004). *Content Analysis: An Introduction to Its Methodology.* Sage.
+- Stefanic, N., Iverson, D., Caputi, P., & Lane, L. (2016). *European Journal of Cancer Care,* 26(5), e12494.
+- Macnamara, J. (2018). *Content Analysis.* In *Handbook of Research Methods for Media and Communication Studies.*
+- Rogers, E. M., & Chaffee, S. H. (1993). *The Past and the Future of Communication Study.* *Journal of Communication,* 43(4), 125–131.
+
+---
+
+## 💡 總結
+
+> DiscourseLens v3.0 是一個跨理論整合的批判語篇分析框架，
+> 
+> 
+> 在語用、權力、意識形態、敘事、情感與方法論六層之間建立可驗證的學術鏈條。
+> 
+> 它既強調詮釋深度（interpretive depth），亦要求信度一致性（analytical reliability）。
+>

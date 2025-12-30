@@ -1,0 +1,9 @@
+paddlepaddle
+paddleocr  # engine handles both cls-capable and non-cls PaddleOCR versions (keep try/except fallback)
+opencv-python
+sentence-transformers
+scikit-learn
+numpy
+plotly
+pandas
+python-dotenv>=1.0.0

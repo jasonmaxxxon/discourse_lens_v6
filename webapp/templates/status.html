@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8" />
+    <title>DiscourseLens Dashboard</title>
+    {% if status in ["pending", "running"] %}
+    <meta http-equiv="refresh" content="2; url=/status/{{ job_id }}" />
+    {% endif %}
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, "Segoe UI", Roboto, sans-serif; background: #f4f4f9; color: #333; margin:0; padding:20px; }
+        .dashboard { display: grid; grid-template-columns: 320px 1fr; gap: 16px; max-width: 1400px; margin: 0 auto; align-items: flex-start; }
+        .sidebar-column { min-width: 0; }
+        .main-column { min-width: 0; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 16px; }
+        .card h3 { margin-top: 0; color: #555; border-bottom: 2px solid #eee; padding-bottom: 8px; }
+        .hud-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 16px; }
+        .metric-box { background: #eef2f5; padding: 12px; border-radius: 10px; text-align: center; }
+        .metric-val { font-size: 1.2em; font-weight: bold; display: block; }
+        .metric-label { font-size: 0.85em; color: #666; }
+        progress { width: 100%; height: 10px; border-radius: 5px; }
+        progress::-webkit-progress-value { background: #4caf50; border-radius: 5px; }
+        .badge { padding: 3px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold; color: white; }
+    .cluster-noise { background-color: #999; }
+    .report-content { white-space: pre-wrap; font-family: monospace; line-height: 1.5; }
+    .comment-badge { background:#e0e7ff; color:#4338ca; padding:2px 6px; border-radius:4px; font-size:12px; margin-right:6px; }
+    .logs-box { background:#020617; color:#e5e7eb; border-radius:12px; padding:12px; font-family: monospace; font-size:12px; }
+    .full-comment { border-bottom: 1px solid #333; padding: 8px 0; }
+    .full-user { font-weight:600; margin-right:8px; }
+    .full-likes { color:#e66; margin-right:8px; }
+    .full-text { margin-top:4px; white-space:pre-wrap; }
+  </style>
+</head>
+<body>
+  {% set post = post or None %}
+  <div class="dashboard">
+    <div class="sidebar-column">
+      <div class="card">
+        <h3>📡 Target Artifact</h3>
+        {% if post %}
+          <p><strong>Author:</strong> {{ post.author or 'Unknown' }}</p>
+          <p><strong>Likes / Replies / Views:</strong> {{ post.metrics.likes if post.metrics is defined else post.like_count }} / {{ post.metrics.reply_count if post.metrics is defined else post.reply_count }} / {{ post.view_count or (post.metrics.views if post.metrics is defined else 'N/A') }}</p>
+          <div style="background:#fafafa; padding:12px; border-left:4px solid #333; margin:10px 0;">
+            {{ post.post_text }}
+          </div>
+          {% if post.images %}
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            {% for img in post.images %}
+              {% set img_src = img.cdn_url or img.proxy_url or img.src or img.original_src %}
+              {% if img_src %}
+                <img src="/proxy_image?url={{ img_src | urlencode }}" alt="{{ img.full_report or img.alt or 'Post image' }}" referrerpolicy="no-referrer" style="width:90px; height:90px; object-fit:cover; border-radius:8px; border:1px solid #eee;" />
+              {% endif %}
+            {% endfor %}
+          </div>
+          {% endif %}
+          {% if post.quant_summary %}
+          <div class="metric-box" style="margin-top:12px;">
+            <span class="metric-val">{{ post.quant_summary.math_homogeneity if post.quant_summary else 'N/A' }}</span>
+            <span class="metric-label">Math Homogeneity</span>
+          </div>
+          {% endif %}
+        {% else %}
+          <p>等待抓取結果...</p>
+        {% endif %}
+      </div>
+      <div class="card">
+        <h3>Logs</h3>
+        <div class="logs-box">
+          {% if logs and logs|length > 0 %}
+            {{ "\n".join(logs) }}
+          {% else %}
+            （尚無 log）
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="main-column">
+      <div class="card">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+          <div>
+            <h3 style="margin:0;">🎯 Intelligence HUD</h3>
+            <small>Job {{ job_id }} | Status: {{ status }}</small>
+          </div>
+          {% if summary %}
+          <div style="font-size:12px; color:#6b7280;">{{ summary }}</div>
+          {% endif %}
+        </div>
+        {% set tags = post.ai_tags if post and post.ai_tags else {} %}
+        <div class="hud-grid">
+          <div class="metric-box" style="background:#e3f2fd;">
+            <span class="metric-val">{{ tags.get('Sector_ID','N/A') }}</span>
+            <span class="metric-label">Sector</span>
+          </div>
+          <div class="metric-box" style="background:#fff3e0;">
+            <span class="metric-val">{{ tags.get('Primary_Emotion','N/A') }}</span>
+            <span class="metric-label">Emotion</span>
+          </div>
+          <div class="metric-box">
+            {% set civ = tags.get('Civil_Score', 0) %}
+            <label>Civil Score: {{ civ }}/10</label>
+            <progress value="{{ civ }}" max="10"></progress>
+          </div>
+          <div class="metric-box">
+            {% set homo = tags.get('Homogeneity_Score', 0) %}
+            <label>Homogeneity: {{ homo }}</label>
+            <progress value="{{ homo }}" max="1.0"></progress>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>⚔️ Semantic Battlefield (輿論地形圖)</h3>
+        {{ chart_html | safe }}
+        <p style="margin-top:10px; font-size:0.8rem; color:#6b7280;">
+          說明：此圖為留言在語義空間的降維分佈。圓點位置越接近，代表內容越相似；圓點越大代表按讚數越高；顏色代表不同的意見派系。
+        </p>
+        {% if post and post.cluster_summary %}
+        <h4>Cluster Samples</h4>
+        {% set clusters = post.cluster_summary.get('clusters') or {} %}
+        {% if clusters %}
+          {% for cid, info in clusters.items() %}
+            {% set label_cid = info.cluster_id if info.cluster_id is defined else cid %}
+            {% set pct_val = info.pct if info.pct is defined else None %}
+            {% if pct_val is not none %}
+              {% set pct_text = ((pct_val * 100) | round(0, 'common')) ~ '%' %}
+            {% elif info.pct_label is defined and info.pct_label %}
+              {% set pct_text = info.pct_label %}
+            {% else %}
+              {% set pct_text = '0%' %}
+            {% endif %}
+            {% set display_name = info.name if info.name is defined and info.name else 'Cluster ' ~ label_cid %}
+            {% set summary_text = info.summary if info.summary is defined and info.summary else '暫無摘要。' %}
+            <div style="padding:8px 0; border-bottom:1px solid #eee;">
+              <h3 style="margin-bottom: 0; font-weight:600; font-size:15px;">
+                {{ display_name }}（{{ pct_text | replace('%','') | int if pct_text.endswith('%') else pct_text }}%）
+              </h3>
+              <p class="cluster-summary" style="color:#999; margin-top:2px; margin-bottom:10px;">
+                {{ summary_text }}
+              </p>
+              <div style="color:#666; margin-top:-6px; margin-bottom:6px;">{{ info.count if info.count is defined else 0 }} 則留言</div>
+              {% set samples = info.samples or [] %}
+              {% if samples %}
+              <ul style="list-style:none; padding-left:0; margin:4px 0 0 0; font-size:0.8rem; color:#475569;">
+                {% for s in samples[:3] %}
+                <li style="margin-bottom:4px; border-top:1px dashed #e5e7eb; padding-top:4px;">
+                  <div style="display:flex; justify-content:space-between;">
+                    <span style="font-weight:600;">
+                      {{ s.get('user','') }}
+                    </span>
+                    <span style="color:#b91c1c; background:#fee2e2; padding:1px 6px; border-radius:999px; font-size:0.7rem;">
+                      ❤️ {{ s.get('like_count', s.get('likes', 0)) }}
+                    </span>
+                  </div>
+                  <div style="margin-top:2px; white-space:pre-wrap;">
+                    {{ s.get('text','') }}
+                  </div>
+                </li>
+                {% endfor %}
+              </ul>
+              {% endif %}
+            </div>
+          {% endfor %}
+        {% else %}
+          <p>Not enough comments for clustering. All comments treated as a single group.</p>
+        {% endif %}
+        {% endif %}
+        {% if post and post.comments %}
+        <details style="margin-top: 16px;">
+          <summary style="cursor:pointer; padding:8px 12px; font-weight:600; background:#161b22; border-radius:6px; border:1px solid #30363d;">
+            📂 查看完整留言列表（按讚數排序）
+          </summary>
+
+          <div style="max-height: 400px; overflow-y: auto; margin-top: 10px; font-size: 0.9rem;">
+            {% set all_comments = post.comments %}
+            {% set sorted_comments = all_comments|sort(attribute='like_count', reverse=True) %}
+
+            {% if sorted_comments %}
+              <ul style="list-style:none; padding-left:0; margin:0;">
+                {% for c in sorted_comments %}
+                  <li style="margin-bottom: 8px; border-bottom: 1px solid #30363d; padding-bottom: 6px;">
+                    <div style="font-weight:600;">
+                      {{ c.get('user','Unknown') }}  
+                      <span style="margin-left:8px;">❤️ {{ c.get('like_count', c.get('likes', 0)) }}</span>
+                    </div>
+                    <div style="white-space: pre-wrap;">{{ c.get('text','') }}</div>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <p style="color:#8b949e;">尚未有可顯示的留言。</p>
+            {% endif %}
+          </div>
+        </details>
+        {% endif %}
+      </div>
+
+      <div class="card">
+        <h3>📄 Intelligence Report</h3>
+        <details open>
+          <summary style="cursor: pointer; font-weight: 600; margin-bottom: 8px;">
+            展開／收合詳細分析報告
+          </summary>
+          {% if post and post.full_report %}
+            <div id="report-markdown" class="report-content">{{ post.full_report }}</div>
+            <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+            <script>
+              (function(){
+                const el = document.getElementById("report-markdown");
+                if (el && window.marked) {
+                  el.innerHTML = marked.parse(el.textContent || "");
+                }
+              })();
+            </script>
+          {% else %}
+            <p>No report yet.</p>
+          {% endif %}
+        </details>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

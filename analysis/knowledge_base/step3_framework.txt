@@ -1,0 +1,89 @@
+[STEP 3 ANALYTICAL PROTOCOL & TAXONOMY (ENHANCED)]
+
+!!! ANALYST INSTRUCTION !!!
+This document provides an Analytical Framework for interpreting social media phenomena and extracting sociological features (Sector, L1–L3).
+Final Phenomenon Identity (ID and Canonical Name) is determined exclusively by the Registry System. This framework MUST NOT generate or rename identities.
+Do not guess. If a post is ambiguous, prioritize "Latent Function" over "Surface Content".
+
+================================================================================
+PART 1: SECTOR CLASSIFICATION LOGIC (The 5 Quadrants)
+Map the post to ONE primary sector based on its dominant social function.
+================================================================================
+
+[SECTOR A] SYMBOLIC RESISTANCE (符號抵抗)
+* Core Logic: Content that challenges power structures using "Hidden Transcripts" to evade censorship or retaliation.
+* Primary Criteria:
+  1. Target: Authority figures, policies, or dominant narratives.
+  2. Tone: Playful, Ironic, Cynical (NOT just angry screaming).
+  3. Mechanism: Metaphor (e.g., North Korea), Parody, Reclaiming symbols.
+* Boundary Condition: If the post is purely angry without strategic rhetoric, classify as [SECTOR B].
+* Example: Posting a North Korean passport to imply Hong Kong's lack of freedom.
+
+[SECTOR B] COLLECTIVE TRAUMA (集體創傷)
+* Core Logic: Processing a shared shock or loss through emotional expression.
+* Primary Criteria:
+  1. Trigger: A specific event (Fire, Accident, Arrest).
+  2. Tone: High Arousal (Grief, Rage, Shock) or Depressive (Helplessness).
+  3. Mechanism: Mourning rituals ("R.I.P."), Venting, calling for solidarity.
+* Boundary Condition: If the mourning is used specifically to mock the government (e.g., "Mourning the death of logic"), classify as [SECTOR A].
+* Example: "Seeing the fire makes me want to cry. God bless the victims."
+
+[SECTOR C] DELEGITIMIZATION / CONSPIRACY (去合法化)
+* Core Logic: Eroding the "Moral Authority" of the system by offering alternative (often irrational) explanations.
+* Primary Criteria:
+  1. Mechanism: "Muddling" (Supernatural explanations), "Demoralization" (It's all over/hopeless).
+  2. Content: Feng Shui, Curses, Illuminati, attributing incompetence to malice/evil forces.
+* Boundary Condition: Must involve a rejection of rational discourse.
+* Example: "The snake array caused this fire, not the accident."
+
+[SECTOR D] SANCTUARY OF NORMALCY (常態避難所)
+* Core Logic: Maintaining social order and mental health through the performance of daily life.
+* Primary Criteria:
+  1. Content: Food, Family, Travel, Selfies, Hobbies.
+  2. Function: "Social Stabilizer" - creating a safe zone away from political chaos.
+  3. Tone: Joy, Calm, Neutral, Celebratory.
+* Boundary Condition: If a food photo has a political caption (e.g., "Eating noodles while watching the gov collapse"), it is [SECTOR A], NOT [SECTOR D].
+* Example: "Happy Birthday to me! Buffet with mom."
+
+[SECTOR X] EMERGING PHENOMENA (新興現象)
+* Core Logic: Detecting "Unknown Unknowns".
+* Criteria:
+  1. Does NOT fit A-D.
+  2. Represents a new pattern (e.g., a specific new scam, a viral challenge, a new slang term).
+* Action:
+  Do NOT invent or propose a name.
+  Instead, provide a detailed Phenomenological Description focusing on:
+  - the core mechanism
+  - the social intent
+  - the symbolic or strategic function
+  This description is interpretive evidence for the Registry and downstream analysis, not an identity.
+
+================================================================================
+PART 2: QUANTITATIVE SCORING RUBRIC (評分量表)
+Use these specific markers to calculate scores. Do not estimate randomly.
+================================================================================
+
+1. CIVIL SCORE (1-10)
+* Measure of: Constructiveness and adherence to social norms.
+* Scoring Guide:
+  - [1-3 (Toxic)]: Dehumanization (calling people animals/objects), curses, violent threats, doxxing.
+  - [4-6 (Friction)]: Sarcasm, passive-aggressive debating, sharp criticism without insults, cynicism.
+  - [7-8 (Neutral)]: Factual sharing, polite disagreement, standard social sharing.
+  - [9-10 (Harmonious)]: Explicit praise, blessings ("Safe flight"), ritualistic bonding, high empathy.
+
+2. HOMOGENEITY SCORE (0.0 - 1.0)
+* Measure of: Echo Chamber effect vs. Dialectic Debate within the comments.
+* Calculation Logic:
+  - [0.0 - 0.3 (Conflict Zone)]: Comments are fighting. Mix of Likes and Dislikes. No dominant sentiment.
+  - [0.4 - 0.7 (Discussion)]: Varied opinions but respectful. Or a mix of jokes and serious comments.
+  - [0.8 - 1.0 (Echo Chamber/Ritual)]: Almost all comments say the same thing (e.g., "HBD", "Agree", "Rip").
+* Usage: High score (0.9) often indicates [SECTOR D] (Ritual) or [SECTOR B] (Shared Grief). Low score often indicates a controversial topic.
+
+3. STRATEGY INTENSITY (Low/Medium/High)
+* Measure of: How heavily the post relies on L2 Strategies (e.g., Muddling, Normalization).
+* Logic:
+  - Low: Plain text, literal meaning.
+  - High: Heavy use of metaphor, irony, or specific framing techniques defined in the Academic Theory.
+
+================================================================================
+END OF PROTOCOL

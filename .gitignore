@@ -1,0 +1,55 @@
+# --- System & Editor ---
+.DS_Store
+**/.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# --- Secrets (CRITICAL) ---
+.env
+.env.*
+!.env.example
+auth_threads.json
+# 防止意外上傳任何含有 creds / secret 字眼的檔案
+*credential*
+*secret*
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# --- Logs & Databases ---
+logs/
+*.log
+*.sqlite
+*.db
+dump.rdb
+
+# --- Frontend (Vite/React) ---
+dlcs-ui/node_modules/
+dlcs-ui/dist/
+dlcs-ui/.vite/
+dlcs-ui/coverage/
+# npm/yarn logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# --- Project Artifacts (DiscourseLens V5) ---
+# Ignore content inside images/ but keep the folder
+images/*
+!images/.gitkeep
+
+# Ignore generated reports
+reports/*
+!reports/.gitkeep
+
+# Ignore temp analysis files if any
+*.tmp
