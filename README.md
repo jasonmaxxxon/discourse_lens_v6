@@ -1,6 +1,6 @@
-# DiscourseLens V5 — The Social Intelligence Radar
+# DiscourseLens V6 — The Social Intelligence Radar
 
-> **Status:** V5.1 (Foundation Phase)
+> **Status:** V6 (Foundation Phase)
 > **Checkpoint:** `checkpoint/2025-12-30`
 > **Architecture:** Industrial-Grade / SoT-Driven
 
